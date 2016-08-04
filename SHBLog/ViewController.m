@@ -19,10 +19,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    [LogManager setLogLevel:SHBLogLevelAll];
+//    [LogManager setLogLevel:SHBLogLevelAll];
+    [LogManager setLogLevel:SHBLogLevelWarning | SHBLogLevelError | SHBLogLevelInfo];
     
     [LogManager setColor:[UIColor redColor] forType:SHBLogTypeInfo];
-    
+    [LogManager setColor:[UIColor purpleColor] forType:SHBLogTypeWarning];
     
     
     SHBLog(@"This is normal");
