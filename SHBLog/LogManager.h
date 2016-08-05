@@ -22,6 +22,7 @@ typedef NS_ENUM(NSInteger, SHBLogLevel) {
     SHBLogLevelInfo = 1 << 1,
     SHBLogLevelWarning = 1 << 2,
     SHBLogLevelError = 1 << 3,
+    SHBLogLevelNone = 1 << 4,
 };
 
 // Log 的样式

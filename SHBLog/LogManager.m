@@ -217,6 +217,10 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
 
     SHBLogLevel level = manager.level;
     
+    if ((level & SHBLogLevelNone) != 0) {
+        return false;
+    }
+    
     if ((level & SHBLogLevelAll) != 0) {
         return true;
     }
