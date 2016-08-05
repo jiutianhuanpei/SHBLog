@@ -8,7 +8,7 @@
 
 /**
  *  设置：如果安装了 XcodeColors 插件，可以开启不同颜色日志，按如下配置
- *  Edit Scheme -> Run -> Environment Variables 
+ *  Edit Scheme -> Run -> Environment Variables
  *  添加 XcodeColors : YES
  *
  */
@@ -60,6 +60,11 @@ typedef NS_ENUM(NSInteger, SHBLogType) {
  *  是否允许开启颜色, 默认开启
  */
 + (void)setColorEnabled:(BOOL)enabled;
+
+/**
+ *  是否把日志写入本地，默认写入
+ */
++ (void)enableWriteFileToLocal:(BOOL)enabled;
 
 /**
  *  打印

@@ -44,6 +44,7 @@ NSString *SHBLogTypeString(SHBLogType type) {
 @property (nonatomic, copy) NSString  *filePath;
 
 @property (nonatomic, assign) BOOL  colorEnabled;
+@property (nonatomic, assign) BOOL  writeToLocal;
 
 @end
 
@@ -64,6 +65,7 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
         manager.level = SHBLogLevelAll;
         manager.colorDic = [NSMutableDictionary dictionaryWithCapacity:0];
         manager.colorEnabled = true;
+        manager.writeToLocal = true;
         manager.filePath = [manager createLocalFile];
         
         [manager.colorDic setObject:[UIColor colorWithRed:0.4533 green:0.3531 blue:1.0 alpha:1.0] forKey:SHBLogTypeString(SHBLogTypeInfo)];
@@ -151,7 +153,16 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
         [manager logMessage:message fontColor:color backgroundColor:nil];
     }
     
-    [self writeLogToLocalFile:message];
+    if (manager.writeToLocal) {
+        __weak typeof(self) SHB = self;
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            [SHB writeLogToLocalFile:message];
+        });
+    }
+}
+
++ (void)enableWriteFileToLocal:(BOOL)enabled {
+    [LogManager sharedInstance].writeToLocal = enabled;
 }
 
 + (void)writeLogToLocalFile:(NSString *)log
@@ -214,7 +225,7 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
     
     LogManager *manager = [LogManager sharedInstance];
     
-
+    
     SHBLogLevel level = manager.level;
     
     if ((level & SHBLogLevelNone) != 0) {
@@ -302,7 +313,7 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
         
         return;
     }
-
+    
     
     int count = 5;
     
@@ -314,7 +325,7 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
     NSUInteger fLen = [fColor lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
     NSUInteger gLen = [gColor lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
     
-
+    
     const BOOL fuseStack = fLen < (1024 * 4);
     char fmsgStack[fuseStack ? (fLen + 1) : 1]; // Analyzer doesn't like zero-size array, hence the 1
     char *fc = fuseStack ? fmsgStack : (char *)malloc(fLen + 1);
