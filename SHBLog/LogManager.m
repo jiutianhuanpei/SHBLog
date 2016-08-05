@@ -8,11 +8,9 @@
 
 #import "LogManager.h"
 
-#define XCODE_COLORS_ESCAPE @"\033["
-#define XCODE_COLORS_RESET_FG  XCODE_COLORS_ESCAPE @"fg;"
-#define XCODE_COLORS_RESET_BG  XCODE_COLORS_ESCAPE @"bg;"
-#define XCODE_COLORS_RESET     XCODE_COLORS_ESCAPE @";"
-
+#import <unistd.h>
+#import <sys/uio.h>
+#import <pthread.h>
 
 
 NSString *SHBLogTypeString(SHBLogType type) {
@@ -38,51 +36,14 @@ NSString *SHBLogTypeString(SHBLogType type) {
     }
     return @"";
 }
-
-void SHBLog(NSString *mat, ...) {
-    va_list args;
-    va_start(args, mat);
-    NSString *message = [[NSString alloc] initWithFormat:mat arguments:args];
-    va_end(args);
-    [LogManager logType:SHBLogTypeNormal message:message];
-}
-
-
-void SHBInfoLog(NSString *mat, ...) {
-    va_list args;
-    va_start(args, mat);
-    NSString *message = [[NSString alloc] initWithFormat:mat arguments:args];
-    va_end(args);
-    
-    [LogManager logType:SHBLogTypeInfo message:message];
-}
-
-void SHBWarnLog(NSString *mat, ...) {
-    va_list args;
-    va_start(args, mat);
-    NSString *message = [[NSString alloc] initWithFormat:mat arguments:args];
-    va_end(args);
-    
-    [LogManager logType:SHBLogTypeWarning message:message];
-}
-
-void SHBErrorLog(NSString *mat, ...) {
-    va_list args;
-    va_start(args, mat);
-    NSString *message = [[NSString alloc] initWithFormat:mat arguments:args];
-    va_end(args);
-    
-    [LogManager logType:SHBLogTypeError message:message];
-}
-
-
-
 @interface LogManager ()
 
 @property (nonatomic, assign) SHBLogLevel   level;
 
 @property (nonatomic, strong) NSMutableDictionary   *colorDic;
 @property (nonatomic, copy) NSString  *filePath;
+
+@property (nonatomic, assign) BOOL  colorEnabled;
 
 @end
 
@@ -102,7 +63,13 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
         manager = [[LogManager alloc] init];
         manager.level = SHBLogLevelAll;
         manager.colorDic = [NSMutableDictionary dictionaryWithCapacity:0];
+        manager.colorEnabled = true;
         manager.filePath = [manager createLocalFile];
+        
+        [manager.colorDic setObject:[UIColor colorWithRed:0.4533 green:0.3531 blue:1.0 alpha:1.0] forKey:SHBLogTypeString(SHBLogTypeInfo)];
+        [manager.colorDic setObject:[UIColor redColor] forKey:SHBLogTypeString(SHBLogTypeError)];
+        [manager.colorDic setObject:[UIColor orangeColor] forKey:SHBLogTypeString(SHBLogTypeWarning)];
+        
     });
     return manager;
 }
@@ -112,19 +79,8 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
 }
 
 // 不同的 log type
-+ (void)logType:(SHBLogType)type message:(NSString *)aMessage {
++ (void)logType:(SHBLogType)type message:(NSString *)aMessage, ... {
     LogManager *manager = [LogManager sharedInstance];
-    
-    UIColor *color = manager.colorDic[SHBLogTypeString(type)];
-    if (color == nil) {
-        color = [UIColor blackColor];
-    }
-    
-    if (![self canLog:type]) {
-        // 不在控制台输出
-        return;
-    }
-    
     /**
      *  不同 type 的log 的前缀
      */
@@ -142,25 +98,17 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
             prix = @"Error: ";
             break;
         }
-            default:
+        default:
             break;
     }
     
-    NSString *message = [NSString stringWithFormat:@"%@%@", prix, aMessage];
+    va_list args;
+    va_start(args, aMessage);
     
-    NSString *colorString = [self fgStringWithColor:color];
+    NSString *temp = [[NSString alloc] initWithFormat:aMessage arguments:args];
+    va_end(args);
     
-    char *xcode_colors = getenv("XcodeColors");
-    if (xcode_colors && (strcmp(xcode_colors, "YES") == 0))
-    {
-        setenv("XcodeColors", "YES", 0);
-        // XcodeColors is installed and enabled!
-        NSLog((XCODE_COLORS_ESCAPE @"%@" @"%@" XCODE_COLORS_RESET), colorString, message);
-    }
-    else
-    {
-        NSLog(@"%@", message);
-    }
+    NSString *message = [NSString stringWithFormat:@"%@%@", prix, temp];
     
     /**
      *  不同打印type的前缀
@@ -173,8 +121,17 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
     });
     
     NSString *time = [NSString stringWithFormat:@"[%@] ", [df stringFromDate:[NSDate date]]];
-
+    
     message = [time stringByAppendingString:message];
+    
+    UIColor *color = manager.colorDic[SHBLogTypeString(type)];
+    if (color == nil) {
+        color = [UIColor blackColor];
+    }
+    if ([self canLog:type]) {
+        // 在控制台输出
+        [manager logMessage:message fontColor:color backgroundColor:nil];
+    }
     
     [self writeLogToLocalFile:message];
 }
@@ -272,12 +229,10 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
     [manager.colorDic setObject:color forKey:SHBLogTypeString(type)];
 }
 
-+ (NSString *)fgStringWithColor:(UIColor *)color {
-    CGFloat red, green, blue, alpha;
-    [color getRed:&red green:&green blue:&blue alpha:&alpha];
-    NSString *str = [NSString stringWithFormat:@"fg%.f,%.f,%.f;", red * 255, green * 255, blue * 255];
-    return str;
++ (void)setColorEnabled:(BOOL)enabled {
+    [LogManager sharedInstance].colorEnabled = enabled;
 }
+
 
 - (NSString *)currentLogPath
 {
@@ -300,6 +255,92 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
         [fileManager createDirectoryAtPath:localPath withIntermediateDirectories:true attributes:nil error:nil];
     }
     return localPath;
+}
+
+- (void)logMessage:(NSString *)aMessage fontColor:(UIColor *)aFontColor backgroundColor:(UIColor *)aBackgroundColor {
+    
+    NSString *logMsg = aMessage;
+    NSUInteger msgLen = [logMsg lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+    
+    char *msg = (char *)malloc(msgLen + 1);
+    [logMsg getCString:msg maxLength:msgLen + 1 encoding:NSUTF8StringEncoding];
+    
+    int count = 5;
+    
+    struct iovec v[count];
+    
+    NSString *fColor = [self fgColor:aFontColor];
+    NSString *gColor = [self bgColor:aBackgroundColor];
+    
+    NSUInteger fLen = [fColor lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+    NSUInteger gLen = [gColor lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+    
+    char *fc = (char *)malloc(fLen + 1);
+    char *gc = (char *)malloc(gLen + 1);
+    
+    [fColor getCString:fc maxLength:fLen + 1 encoding:NSUTF8StringEncoding];
+    [gColor getCString:gc maxLength:gLen + 1 encoding:NSUTF8StringEncoding];
+    
+    if (self.colorEnabled) {
+        v[0].iov_base = fc;
+        v[0].iov_len = fLen;
+        
+        v[1].iov_base = gc;
+        v[1].iov_len = gLen;
+        
+        v[4].iov_base = "\x1b[;";
+        v[4].iov_len = 3;
+    } else {
+        v[0].iov_base = "";
+        v[0].iov_len = 0;
+        
+        v[1].iov_base = "";
+        v[1].iov_len = 0;
+        
+        v[4].iov_base = "";
+        v[4].iov_len = 0;
+    }
+    
+    v[2].iov_base = (char *)msg;
+    v[2].iov_len = msgLen;
+    
+    v[3].iov_base = "\n";
+    v[3].iov_len = (msg[msgLen] == '\n') ? 0 : 1;
+    
+    writev(STDOUT_FILENO, v, count);
+}
+
+- (NSString *)fgColor:(UIColor *)color {
+    if (color == nil) {
+        return @"";
+    }
+    CGFloat red, green, blue, alpha;
+    [color getRed:&red green:&green blue:&blue alpha:&alpha];
+    NSString *str = [NSString stringWithFormat:@"\x1b[fg%.f,%.f,%.f;", red * 255, green * 255, blue * 255];
+    return str;
+}
+
+- (NSString *)bgColor:(UIColor *)color {
+    if (color == nil) {
+        return @"";
+    }
+    CGFloat red, green, blue, alpha;
+    [color getRed:&red green:&green blue:&blue alpha:&alpha];
+    NSString *str = [NSString stringWithFormat:@"\x1b[bg%.f,%.f,%.f;", red * 255, green * 255, blue * 255];
+    return str;
+}
+
+- (BOOL)colorEnabled {
+    
+    char *xcode_colors = getenv("XcodeColors");
+    if (xcode_colors && (strcmp(xcode_colors, "YES") == 0))
+    {
+        // XcodeColors is installed and enabled!
+        setenv("XcodeColors", "YES", 0);
+        
+        return _colorEnabled;
+    }
+    return false;
 }
 
 @end

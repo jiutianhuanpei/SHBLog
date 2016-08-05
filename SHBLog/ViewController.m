@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "LogManager.h"
 
+
 @interface ViewController ()
 
 @end
@@ -19,21 +20,29 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-//    [LogManager setLogLevel:SHBLogLevelAll];
-    [LogManager setLogLevel:SHBLogLevelWarning | SHBLogLevelError | SHBLogLevelInfo];
+    [LogManager setLogLevel:SHBLogLevelAll];
+//    [LogManager setLogLevel:SHBLogLevelWarning | SHBLogLevelError | SHBLogLevelInfo];
     
-    [LogManager setColor:[UIColor redColor] forType:SHBLogTypeInfo];
-    [LogManager setColor:[UIColor purpleColor] forType:SHBLogTypeWarning];
+//    [LogManager setColor:[UIColor redColor] forType:SHBLogTypeInfo];
+//    [LogManager setColor:[UIColor purpleColor] forType:SHBLogTypeWarning];
+    [LogManager setColorEnabled:true];
+    
+
+    SHBLog(@"logPath:\n%@", [LogManager sharedInstance].currentLogPath);
+    
+//    [self temp];
+//    [self temptt];
     
     
     SHBLog(@"This is normal");
     SHBInfoLog(@"This is Info");
     SHBErrorLog(@"This is Error");
     SHBWarnLog(@"This is warning");
-    
-    NSLog(@"path:\n%@", [[LogManager sharedInstance] currentLogPath]);
+//
+//    NSLog(@"path:\n%@", [[LogManager sharedInstance] currentLogPath]);
     
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

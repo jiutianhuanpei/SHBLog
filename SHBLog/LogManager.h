@@ -32,12 +32,10 @@ typedef NS_ENUM(NSInteger, SHBLogType) {
     SHBLogTypeError,
 };
 
-void SHBLog(NSString *mat, ...);
-void SHBInfoLog(NSString *mat, ...);
-void SHBWarnLog(NSString *mat, ...);
-void SHBErrorLog(NSString *mat, ...);
-
-
+#define SHBLog(mat, ...) [LogManager logType:SHBLogTypeNormal message:mat, ##__VA_ARGS__]
+#define SHBInfoLog(mat, ...) [LogManager logType:SHBLogTypeInfo message:mat, ##__VA_ARGS__]
+#define SHBWarnLog(mat, ...) [LogManager logType:SHBLogTypeWarning message:mat, ##__VA_ARGS__]
+#define SHBErrorLog(mat, ...) [LogManager logType:SHBLogTypeError message:mat, ##__VA_ARGS__]
 
 @interface LogManager : NSObject
 
@@ -51,10 +49,16 @@ void SHBErrorLog(NSString *mat, ...);
 /**
  *  为不同的log添加颜色
  *
+ *  默认 Info:浅蓝   Error:红色   warning:橘色
  *  @param color 颜色
  *  @param type  log的type
  */
 + (void)setColor:(UIColor *)color forType:(SHBLogType)type;
+
+/**
+ *  是否允许开启颜色, 默认开启
+ */
++ (void)setColorEnabled:(BOOL)enabled;
 
 /**
  *  打印
@@ -62,8 +66,7 @@ void SHBErrorLog(NSString *mat, ...);
  *  @param type     log type
  *  @param aMessage 消息
  */
-+ (void)logType:(SHBLogType)type message:(NSString *)aMessage;
-
++ (void)logType:(SHBLogType)type message:(NSString *)aMessage, ...;
 
 /**
  *  当前log文件地址
