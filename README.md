@@ -21,5 +21,7 @@ NSLog(@"path:\n%@", [[LogManager sharedInstance] currentLogPath]);
 [LogManager setColor:[UIColor purpleColor] forType:SHBLogTypeWarning];
 ```
 
+<image src="http://upload-images.jianshu.io/upload_images/144854-a12a562b1468cbc7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" width=805 height=412></image>
+
 
 ![QQ20160805-0@2x.png](http://upload-images.jianshu.io/upload_images/144854-a12a562b1468cbc7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
