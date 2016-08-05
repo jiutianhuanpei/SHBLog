@@ -21,4 +21,5 @@ NSLog(@"path:\n%@", [[LogManager sharedInstance] currentLogPath]);
 [LogManager setColor:[UIColor purpleColor] forType:SHBLogTypeWarning];
 ```
 
-![效果截图](http://upload-images.jianshu.io/upload_images/144854-7ac2a39fc67c9449.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+![QQ20160805-0@2x.png](http://upload-images.jianshu.io/upload_images/144854-a12a562b1468cbc7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)

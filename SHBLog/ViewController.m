@@ -29,17 +29,12 @@
     
 
     SHBLog(@"logPath:\n%@", [LogManager sharedInstance].currentLogPath);
+
     
-//    [self temp];
-//    [self temptt];
-    
-    
-    SHBLog(@"This is normal");
     SHBInfoLog(@"This is Info");
     SHBErrorLog(@"This is Error");
     SHBWarnLog(@"This is warning");
-//
-//    NSLog(@"path:\n%@", [[LogManager sharedInstance] currentLogPath]);
+    
     
 }
 
