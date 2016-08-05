@@ -120,9 +120,27 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
         [df setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
     });
     
-    NSString *time = [NSString stringWithFormat:@"[%@] ", [df stringFromDate:[NSDate date]]];
+    NSString *time = [NSString stringWithFormat:@"%@", [df stringFromDate:[NSDate date]]];
     
-    message = [time stringByAppendingString:message];
+    
+    NSString *appName = [[NSProcessInfo processInfo] processName];
+    NSString *processID = [NSString stringWithFormat:@"%i", (int)getpid()];
+    NSString *thirdId = nil;
+    
+    if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_8_0) {
+        __uint64_t tid;
+        pthread_threadid_np(NULL, &tid);
+        thirdId = [[NSString alloc] initWithFormat:@"%llu", tid];
+    }
+    else
+    {
+        thirdId = [[NSString alloc] initWithFormat:@"%x", pthread_mach_thread_np(pthread_self())];
+    }
+    
+    time = [NSString stringWithFormat:@"%@ %@[%@:%@] ", time, appName, processID, thirdId];
+    
+    
+    message = [time stringByAppendingString:message];   //添加时间
     
     UIColor *color = manager.colorDic[SHBLogTypeString(type)];
     if (color == nil) {
@@ -262,8 +280,25 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
     NSString *logMsg = aMessage;
     NSUInteger msgLen = [logMsg lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
     
-    char *msg = (char *)malloc(msgLen + 1);
-    [logMsg getCString:msg maxLength:msgLen + 1 encoding:NSUTF8StringEncoding];
+    const BOOL useStack = msgLen < (1024 * 4);
+    
+    char msgStack[useStack ? (msgLen + 1) : 1]; // Analyzer doesn't like zero-size array, hence the 1
+    char *msg = useStack ? msgStack : (char *)malloc(msgLen + 1);
+    
+    if (msg == NULL) {
+        return;
+    }
+    
+    BOOL logMsgEnc = [logMsg getCString:msg maxLength:(msgLen + 1) encoding:NSUTF8StringEncoding];
+    
+    if (!logMsgEnc) {
+        if (!useStack && msg != NULL) {
+            free(msg);
+        }
+        
+        return;
+    }
+
     
     int count = 5;
     
@@ -275,11 +310,40 @@ NSTimeInterval const LOGTIMEOUT = 60 * 60 * 24;
     NSUInteger fLen = [fColor lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
     NSUInteger gLen = [gColor lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
     
-    char *fc = (char *)malloc(fLen + 1);
-    char *gc = (char *)malloc(gLen + 1);
+
+    const BOOL fuseStack = fLen < (1024 * 4);
+    char fmsgStack[fuseStack ? (fLen + 1) : 1]; // Analyzer doesn't like zero-size array, hence the 1
+    char *fc = fuseStack ? fmsgStack : (char *)malloc(fLen + 1);
     
-    [fColor getCString:fc maxLength:fLen + 1 encoding:NSUTF8StringEncoding];
-    [gColor getCString:gc maxLength:gLen + 1 encoding:NSUTF8StringEncoding];
+    if (fc == NULL) {
+        return;
+    }
+    
+    BOOL flogMsgEnc = [fColor getCString:fc maxLength:(fLen + 1) encoding:NSUTF8StringEncoding];
+    
+    if (!flogMsgEnc) {
+        if (!fuseStack && fc != NULL) {
+            free(msg);
+        }
+        return;
+    }
+    
+    const BOOL guseStack = gLen < (1024 * 4);
+    char gmsgStack[guseStack ? (gLen + 1) : 1]; // Analyzer doesn't like zero-size array, hence the 1
+    char *gc = guseStack ? gmsgStack : (char *)malloc(gLen + 1);
+    
+    if (gc == NULL) {
+        return;
+    }
+    
+    BOOL glogMsgEnc = [gColor getCString:gc maxLength:(gLen + 1) encoding:NSUTF8StringEncoding];
+    
+    if (!glogMsgEnc) {
+        if (!guseStack && gc != NULL) {
+            free(msg);
+        }
+        return;
+    }
     
     if (self.colorEnabled) {
         v[0].iov_base = fc;
