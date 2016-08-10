@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "SHBLog"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "根据 DDLog 而写的，大大精简了代码量"
 
 
