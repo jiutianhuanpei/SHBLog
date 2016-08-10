@@ -14,7 +14,7 @@
 		4D1ECF111D532ED8003BE436 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D1ECF101D532ED8003BE436 /* Assets.xcassets */; };
 		4D1ECF141D532ED8003BE436 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D1ECF121D532ED8003BE436 /* LaunchScreen.storyboard */; };
 		4D1ECF1F1D532ED8003BE436 /* SHBLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1ECF1E1D532ED8003BE436 /* SHBLogTests.m */; };
-		4D9F5A251D538F13000A5583 /* LogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D9F5A241D538F13000A5583 /* LogManager.m */; };
+		4DC8F9001D5ABD2A00886F74 /* LogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DC8F8FF1D5ABD2A00886F74 /* LogManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,8 +41,8 @@
 		4D1ECF1A1D532ED8003BE436 /* SHBLogTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SHBLogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D1ECF1E1D532ED8003BE436 /* SHBLogTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SHBLogTests.m; sourceTree = "<group>"; };
 		4D1ECF201D532ED8003BE436 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4D9F5A231D538F13000A5583 /* LogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogManager.h; sourceTree = "<group>"; };
-		4D9F5A241D538F13000A5583 /* LogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogManager.m; sourceTree = "<group>"; };
+		4DC8F8FE1D5ABD2A00886F74 /* LogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogManager.h; sourceTree = "<group>"; };
+		4DC8F8FF1D5ABD2A00886F74 /* LogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,8 +88,8 @@
 				4D1ECF081D532ED8003BE436 /* AppDelegate.m */,
 				4D1ECF0A1D532ED8003BE436 /* ViewController.h */,
 				4D1ECF0B1D532ED8003BE436 /* ViewController.m */,
-				4D9F5A231D538F13000A5583 /* LogManager.h */,
-				4D9F5A241D538F13000A5583 /* LogManager.m */,
+				4DC8F8FE1D5ABD2A00886F74 /* LogManager.h */,
+				4DC8F8FF1D5ABD2A00886F74 /* LogManager.m */,
 				4D1ECF0D1D532ED8003BE436 /* Main.storyboard */,
 				4D1ECF101D532ED8003BE436 /* Assets.xcassets */,
 				4D1ECF121D532ED8003BE436 /* LaunchScreen.storyboard */,
@@ -216,7 +216,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D9F5A251D538F13000A5583 /* LogManager.m in Sources */,
+				4DC8F9001D5ABD2A00886F74 /* LogManager.m in Sources */,
 				4D1ECF0C1D532ED8003BE436 /* ViewController.m in Sources */,
 				4D1ECF091D532ED8003BE436 /* AppDelegate.m in Sources */,
 				4D1ECF061D532ED8003BE436 /* main.m in Sources */,
