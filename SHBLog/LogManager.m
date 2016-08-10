@@ -7,7 +7,6 @@
 //
 
 #import "LogManager.h"
-
 #import <unistd.h>
 #import <sys/uio.h>
 #import <pthread.h>

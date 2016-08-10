@@ -20,10 +20,13 @@ Pod::Spec.new do |s|
   s.author             = { "shenhongbang" => "shenhongbang@163.com" }
 
 
+   s.platform     = :ios
+  # s.platform     = :ios, "5.0"
+
   s.source       = { :git => "https://github.com/jiutianhuanpei/SHBLog.git", :tag => "#{s.version}" }
 
 
-  s.source_files  = "SHBLogResource/**/*.{h,m}"
+  s.source_files  = "SHBLogResource/*.{h,m}"
   #s.exclude_files = "Classes/Exclude"
 
   # s.public_header_files = "Classes/**/*.h"
