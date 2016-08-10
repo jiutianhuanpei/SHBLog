@@ -26,6 +26,7 @@
 //    [LogManager setColor:[UIColor redColor] forType:SHBLogTypeInfo];
 //    [LogManager setColor:[UIColor purpleColor] forType:SHBLogTypeWarning];
     [LogManager setColorEnabled:true];
+    [LogManager enableWriteFileToLocal:true];
     
 
     SHBLog(@"logPath:\n%@", [LogManager sharedInstance].currentLogPath);
@@ -35,7 +36,7 @@
     SHBErrorLog(@"This is Error");
     SHBWarnLog(@"This is warning");
     
-    
+    SHBMyLog(@"this is mylog %@", @"aaa");
 }
 
 
