@@ -1,6 +1,15 @@
 ---
 SHBLog
 ---
+
+
+　　设置：如果安装了 XcodeColors 插件，可以开启不同颜色日志，按如下配置
+   
+*   Edit Scheme -> Run -> Environment Variables
+*   添加 XcodeColors : YES
+
+
+##介绍
 * 可以打印选定级别的 Log，可以打印多个级别的 Log。
 
 ```
