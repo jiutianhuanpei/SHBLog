@@ -3,32 +3,16 @@ SHBLog
 ---
 
 
-　　设置：如果安装了 XcodeColors 插件，可以开启不同颜色日志，按如下配置
-   
-*   Edit Scheme -> Run -> Environment Variables
-*   添加 XcodeColors : YES
+　　Xcode8 之后不再支持插件，所以也不再支持 XcodeColors 插件显示不同的颜色。
+　　<br>
+　　剔除保存log日志功能，保持本库的纯粹性。同时代码也精简为两个api，如下：
+　　
 
+* `SHBLog` 的打印效果仿系统 `NSLog` 的效果。
+* `SHBPrint` 则是其精简版，仅打印内容，不以时间、进程id为前缀。
 
-##介绍
-* 可以打印选定级别的 Log，可以打印多个级别的 Log。
+代码实现及效果如下：
 
-```
-[LogManager setLogLevel:SHBLogLevelAll];
-[LogManager setLogLevel:SHBLogLevelWarning | SHBLogLevelError]; 
-```
-
-* 也可以把 Log 写入本地文件（默认）。
-
-```
-NSLog(@"path:\n%@", [[LogManager sharedInstance] currentLogPath]);
-```
-
-* 如果 Xcode 安装了 XcodeColors 插件，可以配置日志显示颜色
-
-```
-[LogManager setColor:[UIColor redColor] forType:SHBLogTypeInfo];
-[LogManager setColor:[UIColor purpleColor] forType:SHBLogTypeWarning];
-```
 
 <image src="https://github.com/jiutianhuanpei/SHBLog/raw/master/SHBLog/temp.png" width=805 height=412></image>
 

@@ -7,8 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "LogManager.h"
-
+#import "SHBLog.h"
 
 @interface ViewController ()
 
@@ -20,23 +19,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    [LogManager setLogLevel:SHBLogLevelAll];
-//    [LogManager setLogLevel:SHBLogLevelWarning | SHBLogLevelError | SHBLogLevelInfo];
-    
-//    [LogManager setColor:[UIColor redColor] forType:SHBLogTypeInfo];
-//    [LogManager setColor:[UIColor purpleColor] forType:SHBLogTypeWarning];
-    [LogManager setColorEnabled:true];
-    [LogManager enableWriteFileToLocal:true];
-    
+    SHBLog(@"%s \n This is SHBLog", __FUNCTION__);
 
-    SHBLog(@"logPath:\n%@", [LogManager sharedInstance].currentLogPath);
-
+    SHBPrint(@"%s \n This is SHBPrint", __FUNCTION__);
     
-    SHBInfoLog(@"This is Info");
-    SHBErrorLog(@"This is Error");
-    SHBWarnLog(@"This is warning");
-    
-    SHBMyLog(@"this is mylog %@", @"aaa");
 }
 
 
