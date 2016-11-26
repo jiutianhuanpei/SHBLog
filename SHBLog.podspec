@@ -2,12 +2,12 @@
 Pod::Spec.new do |s|
 
   s.name         = "SHBLog"
-  s.version      = "0.0.2"
-  s.summary      = "根据 DDLog 而写的，大大精简了代码量"
+  s.version      = "0.0.3"
+  s.summary      = "打印日志，性能比NSLog更强悍"
 
 
   s.description  = <<-DESC
-    需要和 Xcode 插件 XcodeColors 配合使用。
+    新版本精简代码量，剔除无用、少用功能，仅保持最基本需求。
 
                    DESC
 
