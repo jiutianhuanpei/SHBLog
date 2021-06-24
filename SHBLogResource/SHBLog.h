@@ -28,6 +28,7 @@ typedef NS_OPTIONS(NSUInteger, HBLogOutputLevel) {
                       | HBLogOutputLevel_Error
                       | HBLogOutputLevel_Fatal),
     
+    //权用于标记日志是否需要输出到文件，需要设置日志路径
     HBLogOutputLevel_Writen = 1 << 20,
 };
 

@@ -20,19 +20,21 @@
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor = UIColor.redColor;
     
-    HBSetOutputLevel(HBLogOutputLevel_Error | HBLogOutputLevel_Warning | HBLogOutputLevel_Writen);
-    
-    NSString *document = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
-    
-    NSString *path = [document stringByAppendingString:@"20210624.log"];
-    HBSetLogPath(path);
-    
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeContactAdd];
     [btn addTarget:self action:@selector(didClickedBtn) forControlEvents:UIControlEventTouchUpInside];
     btn.center = self.view.center;
     [self.view addSubview:btn];
     
     
+    
+    //日志打印等级
+    HBSetOutputLevel(HBLogOutputLevel_Error | HBLogOutputLevel_Warning | HBLogOutputLevel_Writen);
+    
+    NSString *document = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
+    
+    NSString *path = [document stringByAppendingString:@"20210624.log"];
+    //日志存储路径
+    HBSetLogPath(path);
 }
 
 
