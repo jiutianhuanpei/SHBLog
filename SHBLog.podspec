@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "SHBLog"
-  s.version      = "0.0.3"
+  s.version      = "0.1.0"
   s.summary      = "打印日志，性能比NSLog更强悍"
 
 
@@ -38,7 +38,7 @@ Pod::Spec.new do |s|
 
 
   # s.framework  = "SomeFramework"
-   s.frameworks = "UIKit"
+   s.frameworks = "Foundation"
 
   # s.library   = "iconv"
   # s.libraries = "iconv", "xml2"
