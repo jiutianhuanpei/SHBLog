@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3647E667268421930041A9C0 /* SHBLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3647E666268421930041A9C0 /* SHBLog.m */; };
 		4D1ECF061D532ED8003BE436 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1ECF051D532ED8003BE436 /* main.m */; };
 		4D1ECF091D532ED8003BE436 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1ECF081D532ED8003BE436 /* AppDelegate.m */; };
 		4D1ECF0C1D532ED8003BE436 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1ECF0B1D532ED8003BE436 /* ViewController.m */; };
@@ -14,7 +15,6 @@
 		4D1ECF111D532ED8003BE436 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D1ECF101D532ED8003BE436 /* Assets.xcassets */; };
 		4D1ECF141D532ED8003BE436 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D1ECF121D532ED8003BE436 /* LaunchScreen.storyboard */; };
 		4D1ECF1F1D532ED8003BE436 /* SHBLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1ECF1E1D532ED8003BE436 /* SHBLogTests.m */; };
-		4DB2F2251DE9B80500350A64 /* SHBLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2F2241DE9B80500350A64 /* SHBLog.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,6 +28,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3647E665268421930041A9C0 /* SHBLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHBLog.h; sourceTree = "<group>"; };
+		3647E666268421930041A9C0 /* SHBLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHBLog.m; sourceTree = "<group>"; };
 		4D1ECF011D532ED8003BE436 /* SHBLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SHBLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D1ECF051D532ED8003BE436 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4D1ECF071D532ED8003BE436 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -41,8 +43,6 @@
 		4D1ECF1A1D532ED8003BE436 /* SHBLogTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SHBLogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D1ECF1E1D532ED8003BE436 /* SHBLogTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SHBLogTests.m; sourceTree = "<group>"; };
 		4D1ECF201D532ED8003BE436 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4DB2F2231DE9B80500350A64 /* SHBLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHBLog.h; sourceTree = "<group>"; };
-		4DB2F2241DE9B80500350A64 /* SHBLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHBLog.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +63,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3647E664268421930041A9C0 /* SHBLogResource */ = {
+			isa = PBXGroup;
+			children = (
+				3647E665268421930041A9C0 /* SHBLog.h */,
+				3647E666268421930041A9C0 /* SHBLog.m */,
+			);
+			path = SHBLogResource;
+			sourceTree = SOURCE_ROOT;
+		};
 		4D1ECEF81D532ED8003BE436 = {
 			isa = PBXGroup;
 			children = (
@@ -84,12 +93,11 @@
 		4D1ECF031D532ED8003BE436 /* SHBLog */ = {
 			isa = PBXGroup;
 			children = (
+				3647E664268421930041A9C0 /* SHBLogResource */,
 				4D1ECF071D532ED8003BE436 /* AppDelegate.h */,
 				4D1ECF081D532ED8003BE436 /* AppDelegate.m */,
 				4D1ECF0A1D532ED8003BE436 /* ViewController.h */,
 				4D1ECF0B1D532ED8003BE436 /* ViewController.m */,
-				4DB2F2231DE9B80500350A64 /* SHBLog.h */,
-				4DB2F2241DE9B80500350A64 /* SHBLog.m */,
 				4D1ECF0D1D532ED8003BE436 /* Main.storyboard */,
 				4D1ECF101D532ED8003BE436 /* Assets.xcassets */,
 				4D1ECF121D532ED8003BE436 /* LaunchScreen.storyboard */,
@@ -177,6 +185,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -218,7 +227,7 @@
 			files = (
 				4D1ECF0C1D532ED8003BE436 /* ViewController.m in Sources */,
 				4D1ECF091D532ED8003BE436 /* AppDelegate.m in Sources */,
-				4DB2F2251DE9B80500350A64 /* SHBLog.m in Sources */,
+				3647E667268421930041A9C0 /* SHBLog.m in Sources */,
 				4D1ECF061D532ED8003BE436 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -3,7 +3,7 @@
 //  SHBLog
 //
 //  Created by shenhongbang on 2016/11/26.
-//  Copyright © 2016年 中移(杭州)信息技术有限公司. All rights reserved.
+//  Copyright © 2016年 沈红榜. All rights reserved.
 //
 
 #import "SHBLog.h"
@@ -46,7 +46,42 @@ void SHBPrint(NSString *mat, ...) {
     MyLog(msg);
 }
 
-void SHBLog(NSString *mat, ...) {
+
+@interface SHBLog : NSObject
+
+@property (nonatomic, assign) HBLogOutputLevel showLevel;
+@property (nonatomic, copy) NSString *logPath;
+@property (nonatomic, strong) NSFileHandle *fileHandle;
+
+@end
+
+@implementation SHBLog
+
++ (instancetype)shareInstance {
+    static SHBLog *log = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        log = SHBLog.new;
+        log.showLevel = HBLogOutputLevel_All;
+    });
+    return log;
+}
+
++ (void)setOutpuLevel:(HBLogOutputLevel)showLevel {
+    [SHBLog shareInstance].showLevel = showLevel;
+}
+
++ (void)setLogPath:(NSString *)logPath {
+    [SHBLog shareInstance].logPath = logPath;
+}
+
++ (void)log:(HBLogLevel)level msg:(NSString *)mat, ... {
+    
+    BOOL canPrint = [self canLog:level];
+    if (!canPrint) {
+        return;
+    }
+    
     va_list args;
     va_start(args, mat);
     NSString *msg = [[NSString alloc] initWithFormat:mat arguments:args];
@@ -79,12 +114,120 @@ void SHBLog(NSString *mat, ...) {
         thirdId = [[NSString alloc] initWithFormat:@"%x", pthread_mach_thread_np(pthread_self())];
     }
     
-    time = [NSString stringWithFormat:@"%@ %@[%@:%@] ", time, appName, processID, thirdId];
+    NSString *prefix = [NSString stringWithFormat:@"%@ %@[%@:%@] ", time, appName, processID, thirdId];
     
+    prefix = [prefix stringByAppendingString:[self strFrom:level]];
     
-    msg = [time stringByAppendingString:msg];   //添加系统前缀
+    NSString *output = [prefix stringByAppendingString:msg];
     
+    if ([SHBLog shareInstance].showLevel & HBLogOutputLevel_Writen) {
+        [[SHBLog shareInstance].fileHandle writeData:[[output stringByAppendingString:@"\n"]  dataUsingEncoding:NSUTF8StringEncoding]];
+    }
     
-    MyLog(msg);
+    MyLog(output);
+}
+
+
+#pragma mark - helps
++ (NSString *)strFrom:(HBLogLevel)level {
+    switch (level) {
+        case HBLogLevel_Error:
+            return @"Error: ";
+        case HBLogLevel_Warning:
+            return @"Warning: ";
+        case HBLogLevel_Fatal:
+            return @"Fatal: ";
+        default:
+            break;
+    }
+    return @"";
+}
+
++ (BOOL)canLog:(HBLogLevel)level {
+    
+    HBLogOutputLevel showLevel = [SHBLog shareInstance].showLevel;
+    if (showLevel == HBLogOutputLevel_All) {
+        return true;
+    }
+    
+    switch (level) {
+        case HBLogLevel_Normal:
+            return showLevel & HBLogOutputLevel_Normal;
+        case HBLogLevel_Warning:
+            return showLevel & HBLogOutputLevel_Warning;
+        case HBLogLevel_Error:
+            return showLevel & HBLogOutputLevel_Error;
+        case HBLogLevel_Fatal:
+            return showLevel & HBLogOutputLevel_Fatal;
+        default:
+            break;
+    }
+    return false;
+}
+
+- (void)setLogPath:(NSString *)logPath {
+    _logPath = logPath;
+    
+    NSFileManager *manager = NSFileManager.defaultManager;
+    
+    if (![manager fileExistsAtPath:logPath]) {
+        [manager createFileAtPath:logPath contents:nil attributes:nil];
+    }
+    SHBPrint(@"App log file at: %@", logPath);
+    
+    _fileHandle = [NSFileHandle fileHandleForWritingAtPath:logPath];
+}
+
+@end
+
+
+
+void HBSetOutputLevel(HBLogOutputLevel level) {
+    
+    [SHBLog setOutpuLevel:level];
+}
+
+void HBSetLogPath(NSString *logPath) {
+    [SHBLog setLogPath:logPath];
+}
+
+void HBLog(NSString *mat, ...) {
+    
+    va_list args;
+    va_start(args, mat);
+    NSString *msg = [[NSString alloc] initWithFormat:mat arguments:args];
+    va_end(args);
+    
+    [SHBLog log:HBLogLevel_Normal msg:msg];
+}
+
+void HBWarnLog(NSString *mat, ...) {
+    
+    va_list args;
+    va_start(args, mat);
+    NSString *msg = [[NSString alloc] initWithFormat:mat arguments:args];
+    va_end(args);
+    
+    [SHBLog log:HBLogLevel_Warning msg:msg];
+}
+
+void HBErrorLog(NSString *mat, ...) {
+    
+    va_list args;
+    va_start(args, mat);
+    NSString *msg = [[NSString alloc] initWithFormat:mat arguments:args];
+    va_end(args);
+    
+    [SHBLog log:HBLogLevel_Error msg:msg];
+}
+
+void HBFatal(NSString *mat, ...) {
+    
+    va_list args;
+    va_start(args, mat);
+    NSString *msg = [[NSString alloc] initWithFormat:mat arguments:args];
+    va_end(args);
+    
+    [SHBLog log:HBLogLevel_Fatal msg:msg];
 }
 
